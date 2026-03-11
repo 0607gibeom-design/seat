@@ -18,13 +18,14 @@ position:fixed;
 top:20px;
 right:20px;
 background:white;
-padding:10px;
+padding:15px;
 border:1px solid #ccc;
 }
 
 button{
-margin-top:5px;
-width:100%;
+display:block;
+margin-top:6px;
+width:120px;
 }
 
 .circle{
@@ -36,7 +37,7 @@ border-radius:50%;
 display:flex;
 align-items:center;
 justify-content:center;
-font-size:24px;
+font-size:22px;
 font-weight:bold;
 transform:translate(-50%,-50%);
 }
@@ -48,15 +49,19 @@ transform:translate(-50%,-50%);
 <body>
 
 <div id="controls">
-제외 번호<br>
-<input id="exclude" placeholder="예: 2,5,7"><br>
+
+<div>제외 번호</div>
+<input id="exclude" placeholder="예: 2,5,7">
+
 <button onclick="undo()">Undo</button>
 <button onclick="randomSeat()">Random</button>
+<button onclick="resetAll()">Reset</button>
+
 </div>
 
 <script>
 
-let current=1
+let number=1
 let circles=[]
 
 function getExclude(){
@@ -69,25 +74,25 @@ return text.split(",").map(n=>parseInt(n.trim()))
 
 }
 
-function nextNumber(){
+function getNextNumber(){
 
 let exclude=getExclude()
 
-while(exclude.includes(current)){
-current++
+while(exclude.includes(number)){
+number++
 }
 
-return current
+return number
 
 }
 
 function createCircle(x,y){
 
-let num=nextNumber()
+let n=getNextNumber()
 
 let circle=document.createElement("div")
 circle.className="circle"
-circle.innerText=num
+circle.innerText=n
 
 circle.style.left=x+"px"
 circle.style.top=y+"px"
@@ -96,7 +101,7 @@ document.body.appendChild(circle)
 
 circles.push(circle)
 
-current++
+number++
 
 }
 
@@ -114,7 +119,7 @@ let last=circles.pop()
 
 if(last){
 last.remove()
-current--
+number--
 }
 
 }
@@ -125,6 +130,15 @@ let x=Math.random()*window.innerWidth
 let y=Math.random()*window.innerHeight
 
 createCircle(x,y)
+
+}
+
+function resetAll(){
+
+circles.forEach(c=>c.remove())
+
+circles=[]
+number=1
 
 }
 
