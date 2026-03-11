@@ -6,7 +6,6 @@
 <title>Seat Picker</title>
 
 <style>
-
 body{
 margin:0;
 background:white;
@@ -18,14 +17,14 @@ position:fixed;
 top:20px;
 right:20px;
 background:white;
-padding:15px;
+padding:12px;
 border:1px solid #ccc;
 }
 
 button{
 display:block;
 margin-top:6px;
-width:120px;
+width:110px;
 }
 
 .circle{
@@ -41,7 +40,6 @@ font-size:22px;
 font-weight:bold;
 transform:translate(-50%,-50%);
 }
-
 </style>
 
 </head>
@@ -49,14 +47,11 @@ transform:translate(-50%,-50%);
 <body>
 
 <div id="controls">
-
 <div>제외 번호</div>
 <input id="exclude" placeholder="예: 2,5,7">
-
 <button onclick="undo()">Undo</button>
-<button onclick="shuffle()">Random</button>
+<button onclick="shuffleNumbers()">Random</button>
 <button onclick="resetAll()">Reset</button>
-
 </div>
 
 <script>
@@ -64,12 +59,12 @@ transform:translate(-50%,-50%);
 let circles=[]
 let createNumber=1
 
+// 클릭하면 동그라미 생성
 document.addEventListener("click",function(e){
 
 if(e.target.tagName==="INPUT" || e.target.tagName==="BUTTON") return
 
 let circle=document.createElement("div")
-
 circle.className="circle"
 circle.innerText=createNumber
 
@@ -79,11 +74,11 @@ circle.style.top=e.pageY+"px"
 document.body.appendChild(circle)
 
 circles.push(circle)
-
 createNumber++
 
 })
 
+// 마지막 삭제
 function undo(){
 
 let last=circles.pop()
@@ -95,26 +90,27 @@ createNumber--
 
 }
 
+// 제외번호 가져오기
 function getExclude(){
 
 let text=document.getElementById("exclude").value
 
-if(text.trim()=="") return []
+if(text.trim()==="") return []
 
-return text.split(",").map(n=>parseInt(n.trim()))
+return text.split(",").map(n=>parseInt(n.trim())).filter(n=>!isNaN(n))
 
 }
 
-function shuffle(){
+// 번호 랜덤 섞기
+function shuffleNumbers(){
 
 let exclude=getExclude()
 
-let needed=circles.length
-
+let need=circles.length
 let numbers=[]
 let n=1
 
-while(numbers.length < needed){
+while(numbers.length<need){
 
 if(!exclude.includes(n)){
 numbers.push(n)
@@ -124,6 +120,7 @@ n++
 
 }
 
+// 랜덤 섞기
 numbers.sort(()=>Math.random()-0.5)
 
 circles.forEach((c,i)=>{
@@ -132,6 +129,7 @@ c.innerText=numbers[i]
 
 }
 
+// 전체 삭제
 function resetAll(){
 
 circles.forEach(c=>c.remove())
