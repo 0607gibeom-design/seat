@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>자리 랜덤 생성기</title>
+
+<style>
+body{
+background:white;
+font-family:sans-serif;
+text-align:center;
+}
+
+#grid{
+display:grid;
+grid-template-columns:repeat(6,70px);
+gap:10px;
+justify-content:center;
+margin-top:40px;
+}
+
+.seat{
+width:70px;
+height:70px;
+border:1px solid black;
+display:flex;
+align-items:center;
+justify-content:center;
+cursor:pointer;
+}
+</style>
+
+</head>
+
+<body>
+
+<h2>자리 생성기</h2>
+
+<button onclick="generate()">자리 생성</button>
+<button onclick="shuffle()">랜덤 섞기</button>
+
+<div id="grid"></div>
+
+<script>
+
+let seats=30
+
+function generate(){
+
+let grid=document.getElementById("grid")
+grid.innerHTML=""
+
+for(let i=1;i<=seats;i++){
+
+let div=document.createElement("div")
+div.className="seat"
+div.innerText=i
+
+grid.appendChild(div)
+
+}
+
+}
+
+function shuffle(){
+
+let numbers=[]
+
+for(let i=1;i<=seats;i++){
+numbers.push(i)
+}
+
+numbers.sort(()=>Math.random()-0.5)
+
+let seatDivs=document.querySelectorAll(".seat")
+
+seatDivs.forEach((div,i)=>{
+div.innerText=numbers[i]
+})
+
+}
+
+</script>
+
+</body>
+</html>
