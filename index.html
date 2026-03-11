@@ -17,11 +17,14 @@ font-family:sans-serif;
 position:fixed;
 top:20px;
 right:20px;
+background:white;
+padding:10px;
+border:1px solid #ccc;
 }
 
-input{
-padding:6px;
-font-size:14px;
+button{
+margin-top:5px;
+width:100%;
 }
 
 .circle{
@@ -46,40 +49,84 @@ transform:translate(-50%,-50%);
 
 <div id="controls">
 제외 번호<br>
-<input id="exclude" placeholder="예: 2,5,7">
+<input id="exclude" placeholder="예: 2,5,7"><br>
+<button onclick="undo()">Undo</button>
+<button onclick="randomSeat()">Random</button>
 </div>
 
 <script>
 
 let current=1
+let circles=[]
 
-document.addEventListener("click",function(e){
+function getExclude(){
 
-if(e.target.tagName==="INPUT") return
+let text=document.getElementById("exclude").value
 
-let excludeInput=document.getElementById("exclude").value
-let exclude=[]
+if(text.trim()=="") return []
 
-if(excludeInput.trim()!=""){
-exclude=excludeInput.split(",").map(n=>parseInt(n.trim()))
+return text.split(",").map(n=>parseInt(n.trim()))
+
 }
+
+function nextNumber(){
+
+let exclude=getExclude()
 
 while(exclude.includes(current)){
 current++
 }
 
+return current
+
+}
+
+function createCircle(x,y){
+
+let num=nextNumber()
+
 let circle=document.createElement("div")
 circle.className="circle"
-circle.innerText=current
+circle.innerText=num
 
-circle.style.left=e.pageX+"px"
-circle.style.top=e.pageY+"px"
+circle.style.left=x+"px"
+circle.style.top=y+"px"
 
 document.body.appendChild(circle)
 
+circles.push(circle)
+
 current++
 
+}
+
+document.addEventListener("click",function(e){
+
+if(e.target.tagName==="INPUT" || e.target.tagName==="BUTTON") return
+
+createCircle(e.pageX,e.pageY)
+
 })
+
+function undo(){
+
+let last=circles.pop()
+
+if(last){
+last.remove()
+current--
+}
+
+}
+
+function randomSeat(){
+
+let x=Math.random()*window.innerWidth
+let y=Math.random()*window.innerHeight
+
+createCircle(x,y)
+
+}
 
 </script>
 
